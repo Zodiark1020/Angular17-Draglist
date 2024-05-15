@@ -37,10 +37,10 @@
         }"
 
         >
-        <div
-          *ngIf="enableSelection() && selectionMode() === 'multiple'"
-          class="flex flex-row align-items-center gap-2"
-          [ngClass]="{'hidden': visible(i)}"
+        @if(enableSelection() && selectionMode() === 'multiple'){
+          <div
+            class="flex flex-row align-items-center gap-2"
+            [ngClass]="{'hidden': visible(i)}"
          >
           <mat-checkbox
             [checked]="selectedEls()?.includes(i[dataKey()])"
@@ -50,14 +50,16 @@
           <ng-container [ngTemplateOutlet]="template()" [ngTemplateOutletContext]="{$implicit: i, idx: j}">
           </ng-container>
         </div>
-        <div
-          *ngIf="!enableSelection() || selectionMode() === 'single'"
-          (click)="enableSelection() ? onSelect($event, i) : undefined"
-          [ngClass]="{'hidden': visible(i)}"
+        }
+        @if(!enableSelection() || selectionMode() === 'single'){
+          <div
+            [ngClass]="{'hidden': visible(i)}"
+            (click)="enableSelection() ? onSelect($event, i) : undefined"
          >
           <ng-container [ngTemplateOutlet]="template()" [ngTemplateOutletContext]="{$implicit: i, idx: j}">
           </ng-container>
         </div>
+        }
       </div>
     }
     </div>
