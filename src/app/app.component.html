@@ -1,0 +1,19 @@
+<drag-drop-list
+  class="h-full"
+  [(items)]="list"
+  [searchable]="true"
+  [enableSelection]="true"
+  [(selection)]="selection"
+  [selectionMode]="selectionMultiple() ? 'multiple' : 'single'"
+  [dataKey]="'id'"
+  propertySearch="name"
+  (itemsChange)="onListOrderChanged($event)"
+>
+  <ng-template #header>
+
+  </ng-template>
+  <ng-template #item let-item let-idx="idx">
+    <div>{{item.name}}</div>
+  </ng-template>
+
+</drag-drop-list>

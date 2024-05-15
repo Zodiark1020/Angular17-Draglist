@@ -1,0 +1,64 @@
+<ng-container [ngTemplateOutlet]="header()"></ng-container>
+
+@if(searchable()){
+  <mat-form-field style="width: 100%;">
+    <mat-label>Search</mat-label>
+    <mat-icon  class="mr-2" matTextPrefix>search</mat-icon>
+    <input type="text" matInput #searchText>
+    <mat-icon
+      matSuffix
+      class="cursor-pointer"
+      [ngClass]="{'hidden': searchText.value.length === 0}"
+      (click)="searchText.value = ''">
+      close
+    </mat-icon>
+  </mat-form-field>
+}
+
+
+  <div class="flex flex-column flex-1 {{styleClass()}} overflow-auto">
+    <div
+      cdkDropList
+      jamioDragAndDropFileUpload
+      [cdkDropListData]="editItems()"
+      class="flex-1 drag-list {{dropListStyleClass()}}"
+      (cdkDropListDropped)="cdkDrop($event)"
+    >
+    @for(i of editItems(); track editItems(); let j = $index){
+      <div
+        class="drag-item"
+        cdkDrag
+        [cdkDragDisabled]="disabled() || search()?.nativeElement?.value?.length > 0"
+        [ngClass]="{
+          'p-0 border-0': visible(i),
+          'selected': enableSelection() &&
+                      selectionMode() === 'single' &&
+                      selectedEls()?.includes(i[dataKey()])
+        }"
+
+        >
+        <div
+          *ngIf="enableSelection() && selectionMode() === 'multiple'"
+          class="flex flex-row align-items-center gap-2"
+          [ngClass]="{'hidden': visible(i)}"
+         >
+          <mat-checkbox
+            [checked]="selectedEls()?.includes(i[dataKey()])"
+            (ngModelChange)="onSelect($event, i)"
+          >
+          </mat-checkbox>
+          <ng-container [ngTemplateOutlet]="template()" [ngTemplateOutletContext]="{$implicit: i, idx: j}">
+          </ng-container>
+        </div>
+        <div
+          *ngIf="!enableSelection() || selectionMode() === 'single'"
+          (click)="enableSelection() ? onSelect($event, i) : undefined"
+          [ngClass]="{'hidden': visible(i)}"
+         >
+          <ng-container [ngTemplateOutlet]="template()" [ngTemplateOutletContext]="{$implicit: i, idx: j}">
+          </ng-container>
+        </div>
+      </div>
+    }
+    </div>
+  </div>
